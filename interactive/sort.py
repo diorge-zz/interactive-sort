@@ -143,7 +143,7 @@ class BaseAgent(object):
         """ Creates an agent for a given dataset """
         self.sort = Sort(dataset)
 
-    def sort(self):
+    def process(self):
         """ Sort operation, will use ask and retrieve_ordering methods """
         while not self.sort.done:
             self.sort.sort()
