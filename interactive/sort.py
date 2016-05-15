@@ -30,4 +30,8 @@ class TransitivityTable(object):
                      if x != y}
         self._datadim = len(data)
 
+    def status(self, origin, target):
+        """ Return the ordering between origin and target """
+        return self.data[(origin, target)]
+
     dimension = property(fget=lambda self: self._datadim)
