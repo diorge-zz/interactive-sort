@@ -24,3 +24,22 @@ class TestSort(TestCase):
         s.sort()
         assert s.done
         assert expected == s.result
+
+    def test_empty_sort(self):
+        """ Sorts an empty dataset """
+        s = isort.Sort([])
+        s.sort()
+        assert s.done
+        assert [] == s.result
+
+    def test_not_complete_info(self):
+        """ Tries to sort without enough information """
+        s = isort.Sort(self.dataset)
+        s.sort()
+        assert not s.done
+        assert s.question == ('a', 'b')
+
+    def test_sort_null_dataset(self):
+        """ Tries to sort a null dataset """
+        with self.assertRaises(TypeError) as ctx:
+            s = isort.Sort(None)
