@@ -56,6 +56,8 @@ class TransitivityTable(object):
             raise TypeError('Only Ordering is supported')
         if origin not in self._elements:
             raise ValueError('origin is not in the dataset')
+        if target not in self._elements:
+            raise ValueError('target is not in the dataset')
         self.data[(origin, target)] = value
         self.data[(target, origin)] = value.opposite()
         self.transitivity_set(origin)
