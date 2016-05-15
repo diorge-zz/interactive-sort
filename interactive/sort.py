@@ -47,5 +47,6 @@ class TransitivityTable(object):
     def order(self, origin, target, value):
         """ The ordering between origin and target becomes value """
         self.data[(origin, target)] = value
+        self.data[(target, origin)] = value.opposite()
 
     dimension = property(fget=lambda self: self._datadim)
