@@ -34,9 +34,16 @@ class TestTransitivityTable(TestCase):
         table.order('a', 'b', isort.Ordering.Lower)
         assert table.ishigher('b', 'a')
 
+    def test_transitivity_check_positive(self):
+        """ Tests to see if a transitivity check returns positive """
+        table = isort.TransitivityTable(self.dataset)
+        table.order('a', 'b', isort.Ordering.Lower)
+        table.order('b', 'c', isort.Ordering.Lower)
+        assert table.transitivity_check('b')
+
     def test_transitivity(self):
         """ Tests the transitivity check """
         table = isort.TransitivityTable(self.dataset)
         table.order('a', 'b', isort.Ordering.Lower)
         table.order('b', 'c', isort.Ordering.Lower)
-        assert table.ishiger('c', 'a')
+        assert table.ishigher('c', 'a')
