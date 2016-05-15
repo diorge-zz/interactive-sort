@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Interactive Sort
 ================
@@ -9,6 +10,7 @@ ordering for the set.
 
 from enum import Enum
 from collections import deque
+import sys
 
 
 class Ordering(Enum):
@@ -194,3 +196,16 @@ class PreferenceConsoleAgent(BaseAgent):
             r = input()
         a, b = self.question
         return {a: Ordering.Higher, b: Ordering.Lower}[r]
+
+
+if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        print('No dataset provided')
+        exit(1)
+    with open(sys.argv[1]) as f:
+        data = list(map(str.strip, f.readlines()))
+    ag = PreferenceConsoleAgent(data)
+    result = ag.process()
+    result = reversed(result)
+    result = [str(idx + 1) + '. ' + x for (idx, x) in enumerate(result)]
+    print('\n'.join(result))
