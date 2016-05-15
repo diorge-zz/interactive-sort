@@ -7,6 +7,15 @@ ordering for the set.
 """
 
 
+from enum import Enum
+
+
+class status(Enum):
+    Unknown = 0
+    Lower = 1
+    Higher = 2
+
+
 class TransitivityTable(object):
     """
     Transitivity table stores the order between every member of a set.
