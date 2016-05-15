@@ -77,7 +77,8 @@ class TransitivityTable(object):
                    if x != pivot and self.ishigher(x, pivot)]
         for l in lowers:
             for h in highers:
-                self.order(l, h, Ordering.Lower)
+                if self.orderof(l, h) != Ordering.Lower:
+                    self.order(l, h, Ordering.Lower)
 
     dimension = property(fget=lambda self: self._datadim)
 
