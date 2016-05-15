@@ -20,16 +20,16 @@ class TestTransitivityTable(TestCase):
         table = isort.TransitivityTable(self.dataset)
         assert not table.isHigher('a', 'b')
         assert not table.isHigher('b', 'a')
-        assert isort.status.Unknown == table.status('a', 'b')
+        assert isort.Ordering.Unknown == table.status('a', 'b')
 
     def test_set_and_test(self):
         """ Tests for setting an ordering and immediately checking it """
         table = isort.TransitivityTable(self.dataset)
-        table.order('a', 'b', isort.status.Higher)
+        table.order('a', 'b', isort.Ordering.Higher)
         assert table.isHigher('a', 'b')
 
     def test_set_and_reflectivity(self):
         """ Tests for setting an ordering and checking its reflection """
         table = isort.TransitivityTable(self.dataset)
-        table.order('a', 'b', isort.status.Lower)
+        table.order('a', 'b', isort.Ordering.Lower)
         assert table.isHigher('b', 'a')

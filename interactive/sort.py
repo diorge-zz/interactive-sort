@@ -10,7 +10,7 @@ ordering for the set.
 from enum import Enum
 
 
-class status(Enum):
+class Ordering(Enum):
     Unknown = 0
     Lower = 1
     Higher = 2
@@ -25,7 +25,7 @@ class TransitivityTable(object):
     def __init__(self, data):
         """ Creates a new empty transitivity table using elements from
         a supplied dataset """
-        self.data = {(x, y): status.Unknown
+        self.data = {(x, y): Ordering.Unknown
                      for x in data for y in data
                      if x != y}
         self._datadim = len(data)
