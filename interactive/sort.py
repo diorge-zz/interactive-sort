@@ -45,9 +45,23 @@ class TransitivityTable(object):
         """ Returns if origin is higher than target """
         return self.orderof(origin, target) == Ordering.Higher
 
+    def islower(self, origin, target):
+        """ Returns if origin is lower than target """
+        return self.orderof(origin, target) == Ordering.Lower
+
     def order(self, origin, target, value):
         """ The ordering between origin and target becomes value """
         self.data[(origin, target)] = value
         self.data[(target, origin)] = value.opposite()
+        self.transitivity_set(origin)
+        self.transitivity_set(target)
+
+    def transitivity_set(self, pivot):
+        """ Uses the pivot to provide transitivity rules """
+        lowers = [x for x in self._dataset if x != pivot and self.islower(x, pivot)]
+        highers = [x for x in self._dataset if x != pivot and self.ishigher(x, pivot)]
+        for l in lowers:
+            for h in highers:
+                self.order(l, h, Ordering.Lower)
 
     dimension = property(fget=lambda self: self._datadim)
