@@ -80,3 +80,10 @@ class TestTransitivityTable(TestCase):
         table = isort.TransitivityTable(self.dataset)
         with self.assertRaises(TypeError) as e:
             table.order('a', 'b', 5)
+
+    def test_order_multiple_times(self):
+        """ Try to give multiple orderings to a pair """
+        table = isort.TransitivityTable(self.dataset)
+        table.order('a', 'b', isort.Ordering.Lower)
+        with self.assertRaises(ValueError) as e:
+            table.order('b', 'a', isort.Ordering.Lower)
