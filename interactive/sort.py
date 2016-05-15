@@ -38,4 +38,8 @@ class TransitivityTable(object):
         """ Returns if origin is higher than target """
         return self.status(origin, target) == Ordering.Higher
 
+    def order(self, origin, target, value):
+        """ The ordering between origin and target becomes value """
+        self.data[(origin, target)] = value
+
     dimension = property(fget=lambda self: self._datadim)
