@@ -80,3 +80,83 @@ class TransitivityTable(object):
                 self.order(l, h, Ordering.Lower)
 
     dimension = property(fget=lambda self: self._datadim)
+
+
+class Sort(object):
+    """ Provides the interface for sorting a non-natural orderable dataset """
+
+    def __init__(self, dataset):
+        """ Creates a sorting object for the given dataset """
+        self.dataset = dataset
+        self.done = False
+        self.table = TransitivityTable(dataset)
+        self.buckets = deque([[x] for x in dataset])
+        self.result = None
+        self.question = None
+
+    def sort(self):
+        """ Tries to sort the data, halting if missing info """
+        if len(self.buckets) == 0:
+            self.done = True
+            self.result = []
+        elif len(self.buckets) == 1:
+            self.done = True
+            self.result = self.buckets[0]
+        else:
+            ongoing = True
+            while ongoing and len(self.buckets) > 1:
+                ongoing = self.merge()
+            if len(self.buckets) == 1:
+                self.done = True
+                self.result = self.buckets[0]
+
+    def merge(self):
+        """ Merges two existing top buckets """
+        a = self.buckets.popleft()
+        b = self.buckets.popleft()
+        sort = []
+        while len(a) > 0 and len(b) > 0:
+            order = self.table.orderof(a[0], b[0])
+            if order == Ordering.Unknown:
+                self.question = (a[0], b[0])
+                return False
+            elif order == Ordering.Lower:
+                sort.append(a[0])
+                a = a[1:]
+            else:
+                sort.append(b[0])
+                b = b[1:]
+        if len(a) > 0:
+            sort.extend(a)
+        if len(b) > 0:
+            sort.extend(b)
+        self.buckets.append(sort)
+        return True
+
+
+class BaseAgent(object):
+    """ General interface for talking with the user for asking orderings """
+
+    def __init__(self, dataset):
+        """ Creates an agent for a given dataset """
+        self.sort = Sort(dataset)
+
+    def sort(self):
+        """ Sort operation, will use ask and retrieve_ordering methods """
+        while not self.sort.done:
+            self.sort.sort()
+            if self.sort.question is not None:
+                a, b = self.sort.question
+                self.ask(a, b)
+                order = self.retrieve_ordering()
+                self.sort.table.order(a, b, order)
+            self.sort.question = None
+        return self.sort.result
+
+    def ask(self, a, b):
+        """ Base implementation, does nothing """
+        pass
+
+    def retrieve_ordering(self):
+        """ Base implementation, returns Unknown """
+        return Ordering.Unknown
