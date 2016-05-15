@@ -12,4 +12,8 @@ class TransitivityTable(object):
     Transitivity table stores the order between every member of a set.
     It can be operated to fill vacant slots according to the transivity rule.
     """
-    pass
+
+    def __init__(self, data):
+        """ Creates a new empty transitivity table using elements from
+        a supplied dataset """
+        pass
