@@ -28,3 +28,6 @@ class TransitivityTable(object):
         self.data = {(x, y): status.Unknown
                      for x in data for y in data
                      if x != y}
+        self._datadim = len(data)
+
+    dimension = property(fget=lambda self: self._datadim)
