@@ -178,3 +178,19 @@ class ConsoleAgent(BaseAgent):
             print('Invalid answer, use "y" or "n"')
             r = input()
         return {'y': Ordering.Lower, 'n': Ordering.Higher}[r]
+
+
+class PreferenceConsoleAgent(BaseAgent):
+    """ Agent for console interface about preferences """
+
+    def ask(self, a, b):
+        print('Do you prefer {a} or {b}?'.format(a=a, b=b))
+        self.question = (a, b)
+
+    def retrieve_ordering(self):
+        r = input()
+        while r not in self.question:
+            print('Invalid answer, try again')
+            r = input()
+        a, b = self.question
+        return {a: Ordering.Higher, b: Ordering.Lower}[r]
