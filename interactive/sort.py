@@ -80,3 +80,12 @@ class TransitivityTable(object):
                 self.order(l, h, Ordering.Lower)
 
     dimension = property(fget=lambda self: self._datadim)
+
+
+class Sort(object):
+    """ Provides the interface for sorting a non-natural orderable dataset """
+
+    def __init__(self, dataset):
+        """ Creates a sorting object for the given dataset """
+        self.dataset = dataset
+        self.done = False
