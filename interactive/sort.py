@@ -36,13 +36,13 @@ class TransitivityTable(object):
                      if x != y}
         self._datadim = len(data)
 
-    def status(self, origin, target):
+    def orderof(self, origin, target):
         """ Return the ordering between origin and target """
         return self.data[(origin, target)]
 
-    def isHigher(self, origin, target):
+    def ishigher(self, origin, target):
         """ Returns if origin is higher than target """
-        return self.status(origin, target) == Ordering.Higher
+        return self.orderof(origin, target) == Ordering.Higher
 
     def order(self, origin, target, value):
         """ The ordering between origin and target becomes value """
