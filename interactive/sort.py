@@ -51,6 +51,8 @@ class TransitivityTable(object):
 
     def order(self, origin, target, value):
         """ The ordering between origin and target becomes value """
+        if not isinstance(value, Ordering):
+            raise TypeError('Only Ordering is supported')
         self.data[(origin, target)] = value
         self.data[(target, origin)] = value.opposite()
         self.transitivity_set(origin)
