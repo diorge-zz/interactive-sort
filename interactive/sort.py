@@ -25,4 +25,6 @@ class TransitivityTable(object):
     def __init__(self, data):
         """ Creates a new empty transitivity table using elements from
         a supplied dataset """
-        pass
+        self.data = {(x, y): status.Unknown
+                     for x in data for y in data
+                     if x != y}
