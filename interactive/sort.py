@@ -50,9 +50,4 @@ class TransitivityTable(object):
         self.data[(origin, target)] = value
         self.data[(target, origin)] = value.opposite()
 
-    def transitivity_check(self, pivot):
-        """ Checks if a transitivity is available """
-        orders = [self.orderof(pivot, x) for x in self._dataset if x != pivot]
-        return Ordering.Lower in orders and Ordering.Higher in orders
-
     dimension = property(fget=lambda self: self._datadim)
