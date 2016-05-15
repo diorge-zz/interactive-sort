@@ -35,6 +35,7 @@ class TransitivityTable(object):
                      for x in data for y in data
                      if x != y}
         self._datadim = len(data)
+        self._dataset = tuple(data)
 
     def orderof(self, origin, target):
         """ Return the ordering between origin and target """
@@ -48,5 +49,10 @@ class TransitivityTable(object):
         """ The ordering between origin and target becomes value """
         self.data[(origin, target)] = value
         self.data[(target, origin)] = value.opposite()
+
+    def transitivity_check(self, pivot):
+        """ Checks if a transitivity is available """
+        orders = [self.orderof(pivot, x) for x in self._dataset if x != pivot]
+        return Ordering.Lower in orders and Ordering.Higher in orders
 
     dimension = property(fget=lambda self: self._datadim)
