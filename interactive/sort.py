@@ -36,6 +36,7 @@ class TransitivityTable(object):
                      if x != y}
         self._datadim = len(data)
         self._dataset = tuple(data)
+        self._elements = frozenset(data)
 
     def orderof(self, origin, target):
         """ Return the ordering between origin and target """
@@ -53,6 +54,8 @@ class TransitivityTable(object):
         """ The ordering between origin and target becomes value """
         if not isinstance(value, Ordering):
             raise TypeError('Only Ordering is supported')
+        if origin not in self._elements:
+            raise ValueError('origin is not in the dataset')
         self.data[(origin, target)] = value
         self.data[(target, origin)] = value.opposite()
         self.transitivity_set(origin)
