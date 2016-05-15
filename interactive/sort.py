@@ -8,6 +8,7 @@ ordering for the set.
 
 
 from enum import Enum
+from collections import deque
 
 
 class Ordering(Enum):
@@ -90,3 +91,46 @@ class Sort(object):
         """ Creates a sorting object for the given dataset """
         self.dataset = dataset
         self.done = False
+        self.table = TransitivityTable(dataset)
+        self.buckets = deque([[x] for x in dataset])
+        self.result = None
+        self.question = None
+
+    def sort(self):
+        """ Tries to sort the data, halting if missing info """
+        if len(self.buckets) == 0:
+            self.done = True
+            self.result = []
+        elif len(self.buckets) == 1:
+            self.done = True
+            self.result = self.buckets[0]
+        else:
+            ongoing = True
+            while ongoing and len(self.buckets) > 1:
+                ongoing = self.merge()
+            if len(self.buckets) == 1:
+                self.done = True
+                self.result = self.buckets[0]
+
+    def merge(self):
+        """ Merges two existing top buckets """
+        a = self.buckets.popleft()
+        b = self.buckets.popleft()
+        sort = []
+        while len(a) > 0 and len(b) > 0:
+            order = self.table.orderof(a[0], b[0])
+            if order == Ordering.Unknown:
+                self.question = (a[0], b[0])
+                return False
+            elif order == Ordering.Lower:
+                sort.append(a[0])
+                a = a[1:]
+            else:
+                sort.append(b[0])
+                b = b[1:]
+        if len(a) > 0:
+            sort.extend(a)
+        if len(b) > 0:
+            sort.extend(b)
+        self.buckets.append(sort)
+        return True
