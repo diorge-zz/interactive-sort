@@ -114,8 +114,8 @@ class Sort(object):
 
     def merge(self):
         """ Merges two existing top buckets """
-        a = self.buckets.popleft()
-        b = self.buckets.popleft()
+        a = self.buckets[0]
+        b = self.buckets[1]
         sort = []
         while len(a) > 0 and len(b) > 0:
             order = self.table.orderof(a[0], b[0])
@@ -132,6 +132,8 @@ class Sort(object):
             sort.extend(a)
         if len(b) > 0:
             sort.extend(b)
+        self.buckets.popleft()
+        self.buckets.popleft()
         self.buckets.append(sort)
         return True
 
@@ -162,3 +164,17 @@ class BaseAgent(object):
     def retrieve_ordering(self):
         """ Base implementation, returns Unknown """
         return Ordering.Unknown
+
+
+class ConsoleAgent(BaseAgent):
+    """ Agent for console interface, using input function """
+
+    def ask(self, a, b):
+        print('Is ', a, ' lower than ', b, '? (y/n)')
+
+    def retrieve_ordering(self):
+        r = input()
+        while r not in ['y', 'n']:
+            print('Invalid answer, use "y" or "n"')
+            r = input()
+        return {'y': Ordering.Lower, 'n': Ordering.Higher}[r]
