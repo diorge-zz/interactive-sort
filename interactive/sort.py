@@ -15,6 +15,12 @@ class Ordering(Enum):
     Lower = 1
     Higher = 2
 
+    def opposite(self):
+        """ Returns the opposite ordering. >.op(<), <.op(>), ?.op(?) """
+        return {Ordering.Unknown: Ordering.Unknown,
+                Ordering.Lower: Ordering.Higher,
+                Ordering.Higher: Ordering.Lower}[self]
+
 
 class TransitivityTable(object):
     """
