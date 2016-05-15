@@ -58,6 +58,12 @@ class TransitivityTable(object):
             raise ValueError('origin is not in the dataset')
         if target not in self._elements:
             raise ValueError('target is not in the dataset')
+        if (self.data[(origin, target)] != Ordering.Unknown and
+                self.data[(origin, target)] != value):
+            raise ValueError('Ordering already assigned')
+        if (self.data[(target, origin)] != Ordering.Unknown and
+                self.data[(target, origin)] != value.opposite()):
+            raise ValueError('Ordering already assigned')
         self.data[(origin, target)] = value
         self.data[(target, origin)] = value.opposite()
         self.transitivity_set(origin)
@@ -65,8 +71,10 @@ class TransitivityTable(object):
 
     def transitivity_set(self, pivot):
         """ Uses the pivot to provide transitivity rules """
-        lowers = [x for x in self._dataset if x != pivot and self.islower(x, pivot)]
-        highers = [x for x in self._dataset if x != pivot and self.ishigher(x, pivot)]
+        lowers = [x for x in self._dataset
+                  if x != pivot and self.islower(x, pivot)]
+        highers = [x for x in self._dataset
+                   if x != pivot and self.ishigher(x, pivot)]
         for l in lowers:
             for h in highers:
                 self.order(l, h, Ordering.Lower)
